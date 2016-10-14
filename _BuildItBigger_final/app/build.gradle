@@ -1,0 +1,58 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
+
+    defaultConfig {
+        applicationId "com.udacity.gradle.builditbigger"
+        minSdkVersion 15
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors{
+        free{
+            applicationId 'com.udacity.gradle.builditbigger.free'
+        }
+        paid{
+            applicationId 'com.udacity.gradle.builditbigger.paid'
+        }
+
+
+    }
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    // Added for AdMob
+    compile project(":javajokesource")
+    compile project(":displayjoke")
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    /**
+     * 'com.google.android.gms:play-services-ads:9.4.0' is compiled only to provide ads in your project.
+     * Therefore, it should not be compiled for the paid version.
+     * You can use freeCompile instead of compile to ensure that this library is compiled only
+     * for the free flavour.
+     */
+    freeCompile 'com.google.android.gms:play-services-ads:9.4.0'
+    compile project(path: ':backend', configuration: 'android-endpoints')
+
+    // Testing-only dependencies
+    androidTestCompile 'com.android.support:support-annotations:24.2.0'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+}
